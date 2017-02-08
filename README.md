@@ -1,1 +1,1 @@
-# angular2 quick start.
+# angular2 firebase example.
