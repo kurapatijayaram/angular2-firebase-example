@@ -7,7 +7,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "baseUrl": "",
+    "paths" : {
+      "app": ["app/*"]
+    }
   },
   "exclude": [
     "node_modules",

@@ -7,16 +7,18 @@
   var map = {
     'app':                        'app', // 'dist',
     '@angular':                   'node_modules/@angular',
-    'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
+    'angular-in-memory-web-api': 'node_modules/angular-in-memory-web-api',
     'rxjs':                       'node_modules/rxjs',
-    "angular2-social-login": "node_modules/angular2-social-login"
+    "angularfire2": "node_modules/angularfire2",
+    "firebase": "node_modules/firebase"
   };
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {
     'app':                        { main: 'main.js',  defaultExtension: 'js' },
     'rxjs':                       { defaultExtension: 'js' },
-    'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
-    "angular2-social-login": {main: 'lib/index.js', defaultExtension: "js"}
+    'angular-in-memory-web-api': { main: 'bundles/angular-in-memory-web-api.umd.js'},
+    "angularfire2": {main: "bundles/angularfire2.umd.js"},
+    "firebase": {main: "firebase-browser.js"}
   };
   var ngPackageNames = [
     'common',
