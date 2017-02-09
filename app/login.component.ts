@@ -1,40 +1,33 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router"
-import { AngularFire, AuthProviders, AuthMethods } from 'angularfire2';
+import { AngularFire, AuthProviders, AuthMethods, FirebaseAuthState } from 'angularfire2';
+import { UserService } from "app/user.service";
 
 @Component({
     selector: "login",
     templateUrl: "app/login.component.html"
 })
-export class LoginComponent {
-    constructor(private _af: AngularFire, private _router: Router){
-        this._af.auth.subscribe(
+export class LoginComponent implements OnDestroy{
+    constructor(private _af: AngularFire, private _router: Router, private _user: UserService){
+        this._user.loginObservable.subscribe(
             (auth) => {
-                console.log(auth);
-                this._createOrUpdateUser(
-                    {
-                        providerId: auth.google.providerId,
-                        providerUid: auth.google.uid,
-                        email: auth.google.email,
-                        name: auth.google.displayName,
-                        imageUrl: auth.google.photoURL,
-                        uid: auth.uid
+                this._createOrUpdateUser(auth).then(
+                    (success) => {
+                        this._router.navigate(["/home"]);
                     }
-                ).then((success) => {
-                    this._router.navigate(["/home"]);
-                })
+                )
             }
-        );
+        )
     }
 
-    private _createOrUpdateUser(userDetails: {providerId: string, providerUid: string, email: string, name: string, uid: string, imageUrl: string}): Promise<any>{
-        return this._af.database.object("/users/" + userDetails.uid).set(
+    private _createOrUpdateUser(authDetails: FirebaseAuthState): Promise<any>{
+        return this._af.database.object("/users/" + authDetails.uid).set(
             {
-                name: userDetails.name,
-                providerId: userDetails.providerId,
-                email: userDetails.email,
-                providerUid: userDetails.providerUid,
-                imageUrl: userDetails.imageUrl
+                name: authDetails.google.displayName,
+                providerId: authDetails.google.providerId,
+                email: authDetails.google.email,
+                providerUid: authDetails.google.uid,
+                imageUrl: authDetails.google.photoURL
             }
         );
         
@@ -45,5 +38,9 @@ export class LoginComponent {
             provider: AuthProviders.Google,
             method: AuthMethods.Popup,
         });
+    }
+
+    ngOnDestroy(){
+        this._user.loginObservable.unsubscribe();
     }
 }
